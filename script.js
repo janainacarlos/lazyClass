@@ -1,15 +1,9 @@
-/* script.js
-   Interações:
-   - infográfico: clique nas caixas mostra dica
-   - quiz: perguntas sobre Lazy Class (sem dependências)
-*/
-
 document.addEventListener("DOMContentLoaded", () => {
   setupInfographic();
   setupQuiz();
 });
 
-/* ---------------- infographic ---------------- */
+/* infographic clica nas caixas*/
 function setupInfographic() {
   const boxes = document.querySelectorAll(".infografico .info-box");
   boxes.forEach((box) => {
@@ -21,7 +15,7 @@ function setupInfographic() {
   });
 }
 
-/* ---------------- quiz ---------------- */
+/*  quiz sem dependencia */
 function setupQuiz() {
   const quizData = [
     {
