@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Code Smell — Lazy Class (Classe Preguiçosa)</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page">
+    <header class="page-header">
+      <h1>Code Smell — Lazy Class (Classe Preguiçosa)</h1>
+      <p class="team">Equipe: <strong>Ana Júlia Santinoni</strong>, <strong>Janaina Carlos</strong></p>
+    </header>
+
+    <main>
+      <section class="card" id="definicao">
+        <h2>Definição (resumo)</h2>
+        <p>
+          <strong>Lazy Class</strong> (Classe Preguiçosa) é uma classe que possui pouca ou nenhuma
+          responsabilidade útil, normalmente armazenando apenas dados sem comportamento. Ela
+          não justifica sua existência e costuma ser melhor mesclada com outra classe.
+        </p>
+      </section>
+
+      <section class="card" id="consequencias">
+        <h2>Consequências</h2>
+        <ul>
+          <li>Fragmentação do design: muitas classes pequenas e inúteis.</li>
+          <li>Aumento da complexidade sem benefício funcional.</li>
+          <li>Dificuldade de manutenção e navegação no código.</li>
+          <li>Risco de duplicação de lógica entre classes relacionadas.</li>
+        </ul>
+      </section>
+
+      <section class="card" id="exemplos">
+        <h2>Exemplos (Código com smell e refatoração)</h2>
+
+        <div class="example">
+          <h3>JavaScript — Com Lazy Class</h3>
+          <pre><code class="code-js">
+// Classe preguiçosa: apenas guarda dados, sem comportamento
+class ClienteDados {
+  constructor(nome, email) {
+    this.nome = nome;
+    this.email = email;
+  }
+}
+
+class ClienteService {
+  constructor(dados) {
+    this.dados = dados;
+  }
+
+  enviarEmailBoasVindas() {
+    console.log("Bem-vindo(a), " + this.dados.nome);
+  }
+}
+          </code></pre>
+
+          <h4>JavaScript — Refatorado</h4>
+          <pre><code class="code-js">
+class Cliente {
+  constructor(nome, email) {
+    this.nome = nome;
+    this.email = email;
+  }
+
+  enviarEmailBoasVindas() {
+    console.log("Bem-vindo(a), " + this.nome);
+  }
+}
+          </code></pre>
+        </div>
+
+        <div class="example">
+          <h3>Java — Com Lazy Class</h3>
+          <pre><code class="code-java">
+// Endereco é apenas um container de dados (lazy)
+public class Endereco {
+  private String rua;
+  private String cidade;
+
+  public Endereco(String rua, String cidade) {
+    this.rua = rua;
+    this.cidade = cidade;
+  }
+
+  public String getRua() { return rua; }
+  public String getCidade() { return cidade; }
+}
+          </code></pre>
+
+          <h4>Java — Refatorado</h4>
+          <pre><code class="code-java">
+public class Cliente {
+  private String nome;
+  private String rua;
+  private String cidade;
+
+  public Cliente(String nome, String rua, String cidade) {
+    this.nome = nome;
+    this.rua = rua;
+    this.cidade = cidade;
+  }
+
+  public void mostrarEndereco() {
+    System.out.println(nome + " mora em " + rua + ", " + cidade);
+  }
+}
+          </code></pre>
+        </div>
+
+        <div class="example">
+          <h3>Python — Com Lazy Class</h3>
+          <pre><code class="code-py">
+class PedidoInfo:
+    def __init__(self, numero, valor):
+        self.numero = numero
+        self.valor = valor
+
+class PedidoService:
+    def __init__(self, pedido_info):
+        self.pedido_info = pedido_info
+
+    def imprimir(self):
+        print(f"Pedido {self.pedido_info.numero}, valor {self.pedido_info.valor}")
+          </code></pre>
+
+          <h4>Python — Refatorado</h4>
+          <pre><code class="code-py">
+class Pedido:
+    def __init__(self, numero, valor):
+        self.numero = numero
+        self.valor = valor
+
+    def imprimir(self):
+        print(f"Pedido {self.numero}, valor {self.valor}")
+          </code></pre>
+        </div>
+      </section>
+
+      <section class="card" id="refatoracao">
+        <h2>Como resolver / refatorar</h2>
+        <ol>
+          <li>Identificar classes com responsabilidades mínimas (poucos atributos, sem métodos).</li>
+          <li>Avaliar se a classe pode ser <em>inline</em> (mesclada) em outra que tenha comportamento.</li>
+          <li>Se a classe for parte de uma hierarquia com subclasses preguiçosas, considerar <em>collapse hierarchy</em>.</li>
+          <li>Remover classes obsoletas ou transformar em estruturas de dados simples quando for adequado.</li>
+        </ol>
+      </section>
+
+      <section class="card" id="infografico">
+        <h2>Infográfico resumido</h2>
+        <div class="infografico">
+          <div class="info-box">
+            <h3>Lazy Class</h3>
+            <p>Classe com pouca responsabilidade — apenas dados, sem comportamento.</p>
+            <p class="tag">Sintoma</p>
+            <ul>
+              <li>1–2 atributos</li>
+              <li>Sem métodos relevantes</li>
+            </ul>
+          </div>
+
+          <div class="arrow">→</div>
+
+          <div class="info-box">
+            <h3>Solução</h3>
+            <p>Mesclar (Inline Class) ou colapsar hierarquia.</p>
+            <p class="tag">Benefício</p>
+            <ul>
+              <li>Menos complexidade</li>
+              <li>Melhor manutenção</li>
+            </ul>
+          </div>
+        </div>
+        <p class="note">Clique nas caixas para uma dica rápida.</p>
+      </section>
+
+      <section class="card" id="quiz">
+        <h2>Quiz Interativo — teste rápido</h2>
+        <div id="quiz-container">
+          <div id="question">Carregando quiz...</div>
+          <ul id="choices"></ul>
+          <button id="next" class="btn" disabled>Próxima</button>
+          <div id="result" class="result hidden"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="page-footer">
+      <p>Trabalho de Clean Code • Classe Preguiçosa • 7ª fase</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
